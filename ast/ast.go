@@ -1,9 +1,12 @@
 package ast
 
-import "github.com/Jonham/tosca-interpreter-tryout/token"
+import (
+	"bytes"
+)
 
 type Node interface {
 	TokenLiteral() string
+	String() string
 }
 
 type Statement interface {
@@ -28,33 +31,12 @@ func (p *Program) TokenLiteral() string {
 	}
 }
 
-type LetStatement struct {
-	Token token.Token
-	Name  *Identifier
-	Value Expression
-}
+func (p *Program) String() string {
+	var out bytes.Buffer
 
-func (ls *LetStatement) StatementNode() {}
-func (ls *LetStatement) TokenLiteral() string {
-	return ls.Token.Literal
-}
+	for _, s := range p.Statements {
+		out.WriteString(s.String())
+	}
 
-type ReturnStatement struct {
-	Token       token.Token
-	ReturnValue Expression
-}
-
-func (rs *ReturnStatement) StatementNode() {}
-func (rs *ReturnStatement) TokenLiteral() string {
-	return rs.Token.Literal
-}
-
-type Identifier struct {
-	Token token.Token
-	Value string
-}
-
-func (i *Identifier) expressionNode() {}
-func (i *Identifier) TokenLiteral() string {
-	return i.Token.Literal
+	return out.String()
 }
